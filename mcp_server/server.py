@@ -78,11 +78,10 @@ async def generate_infographic(url: str, title: str = None):
         raise RuntimeError(f"Generation failed: {str(e)}")
 
 @mcp.tool()
-async def list_notebooks(limit: int = 20) -> str:
+async def list_notebooks() -> str:
     """
     List all notebooks available in the connected NotebookLM account.
     Returns a JSON string containing a list of objects with 'id' and 'title'.
-    By default returns the most recent 20 notebooks to avoid context overload.
     """
     await ensure_connection()
 
@@ -100,9 +99,6 @@ async def list_notebooks(limit: int = 20) -> str:
         await connected_extension.send(json.dumps(command))
         result = await asyncio.wait_for(future, timeout=120.0)
         
-        if isinstance(result, list):
-            result = result[:limit]
-            
         return json.dumps(result, indent=2)
     except Exception as e:
         if request_id in generation_futures:

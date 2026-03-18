@@ -52,8 +52,8 @@ The MCP server exposes the following capabilities to Claude:
 - **`generate_separately(urls: list[str], title: str = None)`**: 
   Generates separate infographics for each of the provided YouTube video URLs. Returns a list of paths for the downloaded images in your `Downloads` folder.
   
-- **`list_notebooks(limit: int = 20)`**: 
-  Lists all available Notebooks in your connected NotebookLM account. By default, returns the most recent 20 notebooks.
+- **`list_notebooks()`**: 
+  Lists all available Notebooks in your connected NotebookLM account.
   
 - **`get_notebook_content(notebookId: str)`**: 
   Retrieves the text content and sources of a specific Notebook by its ID.
