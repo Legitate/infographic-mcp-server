@@ -1,0 +1,62 @@
+{
+    "manifest_version": 3,
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' ws://localhost:18000 ws://127.0.0.1:18000 https://notebooklm.google.com https://accounts.google.com;"
+    },
+    "name": "Infographic Generator for YouTube",
+    "version": "1.0",
+    "description": "Generate infographics from YouTube videos using NotebookLM.",
+    "homepage_url": "https://github.com/Legitate/infographic-generation",
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "storage",
+        "cookies",
+        "declarativeNetRequest",
+        "downloads",
+        "unlimitedStorage",
+        "alarms",
+        "offscreen"
+    ],
+    "host_permissions": [
+        "*://*.youtube.com/*",
+        "https://notebooklm.google.com/*",
+        "https://accounts.google.com/*",
+        "https://*.googleusercontent.com/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_icon": {
+            "16": "images/icon16.png",
+            "48": "images/icon48.png",
+            "128": "images/icon128.png"
+        }
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.youtube.com/*"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ],
+    "icons": {
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "images/*.png"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
+}
