@@ -12,6 +12,7 @@ from mcp.server.fastmcp import FastMCP, Image
 WS_PORT = 18000
 EXTENSION_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'serverless_extension'))
 PROFILE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'mcp-profile'))
+PROFILE_CACHE_FILE = os.path.join(os.path.dirname(__file__), '.chrome_profile_cache.json')
 CHROME_PATH = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"  # MacOS Default
 
 # Setup Logging
@@ -107,11 +108,18 @@ async def list_notebooks() -> str:
         raise RuntimeError(f"List notebooks failed: {str(e)}")
 
 @mcp.tool()
-async def get_notebook_content(notebook_id: str) -> str:
+async def get_notebook_content(notebook_url_or_id: str) -> str:
     """
-    Get the content of a specific notebook, including its sources.
-    Returns a JSON string with the notebook content.
+    CRITICAL INSTRUCTION: If the user provides a NotebookLM URL (e.g. https://notebooklm.google.com/notebook/...) or a Notebook ID, you MUST immediately call this tool to fetch its content. 
+    DO NOT attempt to use standard web browsing/fetching tools, and DO NOT tell the user you cannot access it. 
+    Just pass the URL or ID directly into this tool's `notebook_url_or_id` parameter and it will securely extract the content for you.
     """
+    import re
+    notebook_id = notebook_url_or_id
+    match = re.search(r'notebook/([a-f0-9\-]+)', notebook_id)
+    if match:
+        notebook_id = match.group(1)
+
     await ensure_connection()
 
     future = asyncio.get_running_loop().create_future()
@@ -358,13 +366,31 @@ def start_chrome(force_launch=False):
     if CUSTOM_PROFILE_DIR:
         launch_chrome(headless=not VISIBLE_MODE)
     else:
-        logger.info("Scanning Chrome profiles for the installed extension...")
-        profiles = find_profiles_with_extension(EXTENSION_PATH)
-        if profiles:
-            logger.info(f"Found extension in {len(profiles)} profile(s): {[p[1] for p in profiles]}")
-            selected_profile = next((p for p in profiles if p[1] == "Default"), profiles[0])
-            logger.info(f"Selected profile: {selected_profile[1]}")
-            
+        selected_profile = None
+        if os.path.exists(PROFILE_CACHE_FILE):
+            try:
+                with open(PROFILE_CACHE_FILE, 'r') as f:
+                    cache_data = json.load(f)
+                    if 'data_dir' in cache_data and 'profile_name' in cache_data:
+                        selected_profile = (cache_data['data_dir'], cache_data['profile_name'])
+                        logger.info(f"Loaded cached Chrome profile: {selected_profile[1]}")
+            except Exception:
+                pass
+                
+        if not selected_profile:
+            logger.info("Scanning Chrome profiles for the installed extension...")
+            profiles = find_profiles_with_extension(EXTENSION_PATH)
+            if profiles:
+                logger.info(f"Found extension in {len(profiles)} profile(s): {[p[1] for p in profiles]}")
+                selected_profile = next((p for p in profiles if p[1] == "Default"), profiles[0])
+                logger.info(f"Selected profile: {selected_profile[1]}")
+                try:
+                    with open(PROFILE_CACHE_FILE, 'w') as f:
+                        json.dump({'data_dir': selected_profile[0], 'profile_name': selected_profile[1]}, f)
+                except Exception:
+                    pass
+        
+        if selected_profile:
             if not force_launch and is_chrome_running():
                 logger.info("Chrome is already running. The extension will connect automatically.")
             else:
