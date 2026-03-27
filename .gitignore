@@ -22,49 +22,15 @@ ehthumbs.db
 Thumbs.db
 
 # Chrome & Extension User Data
-mcp_server/mcp-profile/
-mcp_server/component_crx_cache/
-mcp_server/extensions_crx_cache/
-mcp_server/GrShaderCache/
-mcp_server/GraphiteDawnCache/
-mcp_server/ShaderCache/
-mcp_server/optimization_guide_model_store/
-mcp_server/segmentation_platform/
-mcp_server/MEIPreload/
-mcp_server/NativeMessagingHosts/
-mcp_server/OnDeviceHeadSuggestModel/
-mcp_server/OptimizationHints/
-mcp_server/OriginTrials/
-mcp_server/PKIMetadata/
-mcp_server/PrivacySandboxAttestationsPreloaded/
-mcp_server/RecoveryImproved/
-mcp_server/SSLErrorAssistant/
-mcp_server/SafetyTips/
-mcp_server/TpcdMetadata/
-mcp_server/TrustTokenKeyCommitments/
-mcp_server/WasmTtsEngine/
-mcp_server/WidevineCdm/
-mcp_server/ZxcvbnData/
-mcp_server/ActorSafetyLists/
-mcp_server/AmountExtractionHeuristicRegexes/
-mcp_server/CertificateRevocation/
-mcp_server/Crowd\ Deny/
-mcp_server/FileTypePolicies/
-mcp_server/FirstPartySetsPreloaded/
-mcp_server/Safe\ Browsing/
-mcp_server/Subresource\ Filter/
-mcp_server/*.db*
-mcp_server/Local\ State
-mcp_server/ChromeFeatureState
-mcp_server/Last\ Version
-mcp_server/Variations
+mcp_server/mcp_server_stdio/chrome-data/
+mcp_server/mcp_server_http/chrome-data/
+mcp_server/mcp_server_stdio/.chrome_profile_cache.json
+mcp_server/mcp_server_http/.chrome_profile_cache.json
 
 # Logs
 *.log
-mcp_server/server.log
 
 # Temporary / Testing files
-mcp_server/test_*.py
-mcp_server/test_*.js
-mcp_server/notebooklm_response.txt
-
+test_*.py
+test_*.js
+notebooklm_response.txt

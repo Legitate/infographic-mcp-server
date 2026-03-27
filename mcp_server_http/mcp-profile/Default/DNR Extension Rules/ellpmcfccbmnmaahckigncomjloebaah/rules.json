@@ -1,1 +1,0 @@
-[{"action":{"responseHeaders":[{"header":"access-control-allow-origin","operation":"set","value":"chrome-extension://ellpmcfccbmnmaahckigncomjloebaah"},{"header":"access-control-allow-credentials","operation":"set","value":"true"}],"type":"modifyHeaders"},"condition":{"resourceTypes":["xmlhttprequest"],"urlFilter":"googleusercontent.com"},"id":1,"priority":1}]

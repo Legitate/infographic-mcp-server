@@ -30,7 +30,7 @@ Add the following to your `mcpServers` object:
     "infographic-gen": {
       "command": "/path/to/your/python",
       "args": [
-        "/absolute/path/to/infographic-generation/mcp_server/server.py",
+        "/absolute/path/to/infographic-generation/mcp_server/mcp_server_stdio/server.py",
         "--visible"
       ]
     }
@@ -38,6 +38,38 @@ Add the following to your `mcpServers` object:
 }
 ```
 *Note: Replace `/path/to/your/python` with the absolute path to your Python executable (e.g., from a virtual environment or conda) and `/absolute/path/to/...` with the absolute path to the `server.py` file.*
+
+### 4. HTTP Server Setup (Alternative)
+If you prefer to run the MCP server over HTTP (SSE) instead of `stdio`, a separate server is available.
+This is useful for external applications or browser-based tools that connect via SSE.
+
+1. Navigate to the `mcp_server_http` directory and install the required packages:
+   ```bash
+   cd mcp_server/mcp_server_http
+   pip install -r requirements.txt
+   ```
+2. Run the HTTP server:
+   ```bash
+   python server.py --visible
+   ```
+   *To disable the Google OAuth requirement entirely, run:*
+   ```bash
+   python server.py --visible --no-auth
+   ```
+3. The server runs on `http://localhost:8000` and includes Google OAuth authentication. Visit `http://localhost:8000/login` to authenticate before using the tools (unless you passed `--no-auth`).
+
+If you need a configuration block for an external MCP client (like Windsurf) that supports SSE connections, the config looks like this:
+
+```json
+{
+  "mcpServers": {
+    "info-gen-http": {
+      "disabled": false,
+      "url": "http://127.0.0.1:8000/sse"
+    }
+  }
+}
+```
 
 ## Available Tools
 
